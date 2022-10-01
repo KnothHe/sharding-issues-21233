@@ -18,16 +18,12 @@ public class JsonQueryTest {
 
     @EventListener(ApplicationReadyEvent.class)
     public void doSomethingAfterStartup() {
-        System.out.println(shardingJdbcTemplate.queryForMap("SELECT json_field ->> '$.key' FROM json_test WHERE id = ?", 2));
-        System.out.println(shardingJdbcTemplate.queryForMap("SELECT JSON_UNQUOTE(JSON_EXTRACT(jt.json_field, '$.key')) FROM json_test jt WHERE id = ?", 2));
-        System.out.println(shardingJdbcTemplate.queryForMap("SELECT json_field FROM json_test WHERE id = ?", 2));
-        System.out.println(shardingJdbcTemplate.queryForMap("SELECT jt.json_field FROM json_test jt WHERE id = ?", 2));
+        // WRONG
+        System.out.println(shardingJdbcTemplate.queryForMap("SELECT json_field->>'$.key' FROM json_test WHERE id = ?", 2));
+        // WORK
+//        System.out.println(shardingJdbcTemplate.queryForMap("SELECT json_field FROM json_test WHERE id = ?", 2));
 
-        // WRONG, table aliases and json ->>
-        // https://github.com/apache/shardingsphere/issues/21233#issuecomment-1262165148
-        System.out.println(shardingJdbcTemplate.queryForMap("SELECT jt.json_field ->> '$.key' FROM json_test jt WHERE id = ?", 2));
-
-//        System.out.println(basicJdbcTemplate.queryForMap("SELECT json_field ->> '$.key' FROM json_test0 WHERE id = ?", 2));
+        System.out.println(basicJdbcTemplate.queryForMap("SELECT json_field->>'$.key' FROM json_test0 WHERE id = ?", 2));
 
     }
 
